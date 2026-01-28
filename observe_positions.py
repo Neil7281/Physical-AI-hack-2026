@@ -33,7 +33,7 @@ def find_objects(cap, hue_range=25):
         if area > max1[2]:
             if area > max0[2]:
                 max1 = max0
-                max0 = (x + w // 2, y + h // 2, area)
+                max0 = (x + w // 2, y + h // 2, area) # center x and y instead of right corner
             else:
                 max1 = (x + w // 2, y + h // 2, area)
         
@@ -60,7 +60,7 @@ def get_x_y_relative(cap):
             leftMost = max0
 
         x = (leftMost[0] - rightMost[0]) * cali.in_per_px
-        y = -(leftMost[1] - rightMost[1]) * cali.in_per_px # sign flip since y does points down in vision while traditionally points up
+        y = -(leftMost[1] - rightMost[1]) * cali.in_per_px # flip sign since y points down in image coord while traditional 2d coord points up
 
         height, width = img.shape[:2]
         cv2.line(img, (rightMost[0], 0), (rightMost[0], height), (255, 0, 0), 2)
