@@ -72,7 +72,7 @@ def get_x_y_relative(cap):
         cv2.imshow('Processed Frame', frame)
         cv2.imshow('Original Frame' , img)
 
-        print(f"x, y: {x:.1f}, {y:.1f}")
+        print(f"x, y (in): {x:.1f}, {y:.1f}")
 
         print(f"Left x: {leftMost}")
         print(f" Right x: {rightMost}")
