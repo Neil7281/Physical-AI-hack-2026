@@ -75,7 +75,7 @@ def get_x_y_relative(cap):
         print(f"x, y (in): {x:.1f}, {y:.1f}")
 
         print(f"Left x: {leftMost}")
-        print(f" Right x: {rightMost}")
+        print(f"Right x: {rightMost}")
 
         if cv2.waitKey(1) == ord('q'):
             break
