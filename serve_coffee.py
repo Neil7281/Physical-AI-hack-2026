@@ -1,5 +1,7 @@
 import pexpect
 import sys
+import signal
+import select
 
 def run_inference():
     child = pexpect.spawn(
@@ -31,7 +33,29 @@ def run_inference():
     child.expect('Select cameras')
     child.sendline('0,1')
 
-    child.expect(pexpect.EOF)
+    # child.expect(pexpect.EOF)
+
+    while True:
+        if not child.isalive():
+            print("\nChild finished normally")
+            break
+
+        # Check for user keypress
+        if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
+            key = sys.stdin.read(1)
+            if key.lower() == 'q':
+                print("\n'q' pressed — terminating child")
+                child.kill(signal.SIGKILL)
+                break
+
+        # Drain child output (non-blocking)
+        try:
+            child.expect(pexpect.EOF, timeout=0.1)
+            break
+        except pexpect.TIMEOUT:
+            pass
+
+    child.close()
 
 
 if __name__ == "__main__":
