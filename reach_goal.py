@@ -27,10 +27,10 @@ def calculate_ik_trajectory(start_xyz, goal_xyz, steps=20):
         
     return trajectory
 
-def send_to_waveshare(joint_angles, ser):
-    """
+"""def send_to_waveshare(joint_angles, ser):
+    
     Converts radians to servo units (0-4095) and sends serial packets.
-    """
+    
     # Offset and mapping depend on your physical calibration
     for i, angle in enumerate(joint_angles[1:7]): # Skip base link
         servo_id = i + 1
@@ -44,6 +44,21 @@ def send_to_waveshare(joint_angles, ser):
         packet = bytearray([0xFF, 0xFF, servo_id, 0x07, 0x03, 0x2A, 
                            position & 0xFF, (position >> 8) & 0xFF, 0, 0])
         # Note: You must calculate the proper checksum here for the motor to move!
+        ser.write(packet) """
+
+
+def send_to_waveshare(joint_angles, ser):
+    for i, angle in enumerate(joint_angles[1:7]):
+        servo_id = i + 1
+        position = int(2048 + (angle * (4096 / (2 * np.pi))))
+        position = max(0, min(4095, position))
+        
+        # Structure: [Header, Header, ID, Length, Instruction, Address, Params..., Checksum]
+        # Length = 7 (Instruction(1) + Address(1) + Params(4) + Checksum(1))
+        p = [servo_id, 0x07, 0x03, 0x2A, position & 0xFF, (position >> 8) & 0xFF, 0, 0]
+        checksum = ~(sum(p) & 0xFF) & 0xFF
+        
+        packet = bytearray([0xFF, 0xFF] + p[:-1] + [checksum])
         ser.write(packet)
 
 # Main Execution Flow
