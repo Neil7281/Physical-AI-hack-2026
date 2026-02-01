@@ -13,8 +13,8 @@ def find_objects(cap, hue_range=25):
     frame = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
     # filter by target HSV range
-    lower_bound = np.array([cali.obj_hsv[0] - hue_range, 1, 200])
-    upper_bound = np.array([cali.obj_hsv[0] + hue_range, 25, 255])
+    lower_bound = np.array([cali.obj_hsv[0] - hue_range, cali.obj_hsv[0]-10, 200])
+    upper_bound = np.array([cali.obj_hsv[0] + hue_range, cali.obj_hsv[0]+10, 255])
     frame = cv2.inRange(frame, lower_bound, upper_bound)
 
     # dilate to improve edge detection
@@ -83,7 +83,7 @@ def get_x_y_relative(cap):
 
 if __name__ == "__main__":
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
 
     get_x_y_relative(cap)
 

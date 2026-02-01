@@ -2,9 +2,15 @@ import cv2
 import observe_positions
 import numpy as np
 
-obj_len = 5.3 # in
-obj_len_px = 201 # px
-obj_hsv = [71, 3, 255]
+# for pouring cup
+# obj_len = 3 # in
+# obj_len_px = 109 # px
+# obj_hsv = [94, 57, 252]
+
+# for serving
+obj_len = 3.5 # in
+obj_len_px = 208 # px
+obj_hsv = [0, 0, 252]
 
 in_per_px = obj_len / obj_len_px
 
@@ -67,11 +73,11 @@ def calibrate_obj_hsv(cap, square_size=20):
 # select which calibration process to run
 if __name__ == "__main__":
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
 
-    # calibrate_x_y_scale(cap)
+    calibrate_x_y_scale(cap)
 
-    calibrate_obj_hsv(cap)
+    # calibrate_obj_hsv(cap)
 
     cap.release()
     cv2.destroyAllWindows()
