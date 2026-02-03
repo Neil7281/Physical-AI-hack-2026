@@ -2,27 +2,35 @@ import pexpect
 import sys
 import signal
 import select
+from time import sleep
 
-def run_inference():
+def run_inference(policy, time):
+    time = str(time)
     child = pexpect.spawn(
-        'python solo.py',
+        'solo robo --inference',
         encoding='utf-8',
         timeout=20
     )
 
     child.logfile = sys.stdout
 
-    child.expect('Would you like to use these preconfigured Infence settings')
+    child.expect('Would you like to use these preconfigured Inference settings')
     child.sendline('n')
 
-    child.expect('Would you like to teleoperation during inference')
+    child.expect('Would you like to teleoperate during inference')
     child.sendline('n')
 
     child.expect('Enter follower id')
-    child.sendline('n')
+    child.sendline('1')
+
+    child.expect('Enter policy path')
+    child.sendline(policy)
 
     child.expect('Duration of inference session in seconds')
-    child.sendline('60')
+    child.sendline(time)
+
+    child.expect('Enter task description')
+    child.sendline('Grasp cup and lift')
 
     child.expect('Enter viewing angle for Camera #0')
     child.sendline('wrist')
@@ -59,6 +67,6 @@ def run_inference():
 
 
 if __name__ == "__main__":
-    run_inference()
-    run_inference()
-    run_inference()
+    run_inference("Neil7281/Grasp_ACT_1", 20)
+    run_inference("Neil7281/Traverse_ACT_2", 120)
+    run_inference("Neil7281/putting_back_SOLO_ACT", 30)
